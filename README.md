@@ -56,7 +56,7 @@ next step is to build the image locally
 Hence there is a dot . at the end of the command it referes to the local directory where your command line is at the moment so make sure you are in the working direcctory that contains the above files.
 
 
-image is pulled                                                                                                         ------> [FROM]
+image is pulled                                                                                                         ------>[FROM]
 app.js and package.json are copied inside the image                                                                     ------>[Copy]
 node package installer npm command installs the application which will be the function handler later on.                ------>[RUN]
 and finally defining the command to be executed when the container app of the image we are building is actually run     ------>[CMD] 
@@ -72,4 +72,29 @@ Both CMD and ENTRYPOINT instructions define what command gets executed when runn
         CMD should be used as a way of defining default arguments for an ENTRYPOINT command or for executing an ad-hoc command in a container.
         CMD will be overridden when running the container with alternative arguments.
 
+next we need to create a container repository in our aws account name the repositry 
         
+        get-customer 
+
+after the local image we created. use all the default values and name it get-customer
+click create repository
+
+once the repository is create you can select it on the console interface and on the top right corner choose
+
+        View push commands
+
+you can now execure AWS Cli 1,3,4 you can safely skip command 2 as we already built the image earlier 
+you can confirm on the local existance of the image locally using the below command
+
+        docker images 
+        
+commands should look something like the below please use the commands showing up on your view push commands interface
+
+        aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 123455789101.dkr.ecr.us-west-2.amazonaws.com
+        docker build -t get-customer .  **this is the one that should be skipped**
+        docker tag get-customer:latest 123455789101.dkr.ecr.us-west-2.amazonaws.com/get-customer:latest
+        docker push 123455789101.dkr.ecr.us-west-2.amazonaws.com/get-customer:latest
+        
+now the image is available we need to go create a function of it
+
+![image3](https://user-images.githubusercontent.com/14894918/114280518-4caf2d80-9a42-11eb-9b73-728d29549b7c.png)
