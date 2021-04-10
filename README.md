@@ -14,10 +14,12 @@ Your container images can also use the Lambda Extensions API to integrate monito
 to create a lambda function container on windows for the below example to work
 
         node 
-        docker for windows or linux(subsystem) or Mac
+        AWSCLI v2
+        docker for windows or Linux(subsystem) or Mac
         
 hence: same steps can work with a little bet of tweaking.
 https://nodejs.org/en/download/
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
 https://hub.docker.com/editions/community/docker-ce-desktop-windows/
 
 
@@ -53,7 +55,8 @@ next step is to build the image locally
 
         docker build -t get-customer .
  
-Hence there is a dot . at the end of the command it referes to the local directory where your command line is at the moment so make sure you are in the working direcctory that contains the above files.
+Hence there is a **DOT** at the end of the command it refers to the local directory where your command line is at the moment 
+so make sure you are in the working directory that contains the above files.
 
 
 image is pulled                                                                                                         ------>[FROM]
@@ -66,25 +69,25 @@ alternatively we can use [Enterypoint] if the container will run as executable b
 Understand how CMD and ENTRYPOINT interact
 Both CMD and ENTRYPOINT instructions define what command gets executed when running a container. There are a few rules that describe their co-operation.
 
-        **addetional reading.**
+        **additional reading.**
         Dockerfile should specify at least one of CMD or ENTRYPOINT commands.
         ENTRYPOINT should be defined when using the container as an executable.
         CMD should be used as a way of defining default arguments for an ENTRYPOINT command or for executing an ad-hoc command in a container.
         CMD will be overridden when running the container with alternative arguments.
 
-next we need to create a container repository in our aws account name the repositry 
+next we need to create a container repository in our aws account name the repository  
         
         get-customer 
 
 after the local image we created. use all the default values and name it get-customer
 click create repository
 
-once the repository is create you can select it on the console interface and on the top right corner choose
+once the repository is created you can select it on the console interface and on the top right corner choose
 
         View push commands
 
-you can now execure AWS Cli 1,3,4 you can safely skip command 2 as we already built the image earlier 
-you can confirm on the local existance of the image locally using the below command
+you can now execute AWS Cli 1,3,4 you can safely skip command 2 as we already built the image earlier 
+you can confirm on the local existence of the image locally using the below command
 
         docker images 
         
@@ -98,3 +101,26 @@ commands should look something like the below please use the commands showing up
 now the image is available we need to go create a function of it
 
 ![image3](https://user-images.githubusercontent.com/14894918/114280518-4caf2d80-9a42-11eb-9b73-728d29549b7c.png)
+
+        navigate to Lambda dashboard 
+        create a function 
+        choose Container Image template
+        give the function a name "myGetCustomerFun"
+        click browse images and select the image you pushed earlier to your repository 
+        click create function
+it takes a minute for your function to be created
+
+last step is to test the is to deploy the function which can take 2-5 minutes 
+
+and then click on test the function leave the function Test event Json data as is we are not passing any even data information into the function container.
+
+        when you get a successful execution it indicates your API call to Lambda during the test have taken place 
+        Lambda service directed your call to the function running somewhere in the lambda virtual space 
+        the container runtime within the lambda received your call executed the lambda handler using the app.js 
+        we created earlier which generated the random data you see in the execution result details section.
+
+as a replacement the function handler can be any task you want your container to execute and now you can run your containers without having to worry about compute 
+or pay for clusters or pay while your function is idle you get the best of all worlds.
+
+congratulations.
+
