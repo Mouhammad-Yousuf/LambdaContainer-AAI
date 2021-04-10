@@ -11,7 +11,17 @@ We are also releasing as open source a Lambda Runtime Interface Emulator that en
 Your container images can also use the Lambda Extensions API to integrate monitoring, security and other tools with the Lambda execution environment.
 
 
-to create a lambda function container on windows you need to have node installed 
+to create a lambda function container on windows for the below example to work
+
+        node 
+        docker for windows or linux(subsystem) or Mac
+        
+hence: same steps can work with a little bet of tweaking.
+https://nodejs.org/en/download/
+https://hub.docker.com/editions/community/docker-ce-desktop-windows/
+
+
+
 1. Create an application directory, set up npm, install the Faker.js package for generating test data:
 
         mkdir getCustomerFunction
@@ -31,3 +41,35 @@ to create a lambda function container on windows you need to have node installed
         COPY app.js package*.json ./
         RUN npm install
         CMD [ "app.lambdaHandler" ]
+
+now that we created the docker file and made sure that our working directory contains 
+
+        app.js
+        Dockerfile
+        package.json
+        package-lock.json
+
+next step is to build the image locally 
+
+        docker build -t get-customer .
+ 
+Hence there is a dot . at the end of the command it referes to the local directory where your command line is at the moment so make sure you are in the working direcctory that contains the above files.
+
+
+image is pulled                                                                                                         ------> [FROM]
+app.js and package.json are copied inside the image                                                                     ------>[Copy]
+node package installer npm command installs the application which will be the function handler later on.                ------>[RUN]
+and finally defining the command to be executed when the container app of the image we are building is actually run     ------>[CMD] 
+
+alternatively we can use [Enterypoint] if the container will run as executable but in our case it will run as an adhoc responding to a function call.
+
+Understand how CMD and ENTRYPOINT interact
+Both CMD and ENTRYPOINT instructions define what command gets executed when running a container. There are a few rules that describe their co-operation.
+
+        **addetional reading.**
+        Dockerfile should specify at least one of CMD or ENTRYPOINT commands.
+        ENTRYPOINT should be defined when using the container as an executable.
+        CMD should be used as a way of defining default arguments for an ENTRYPOINT command or for executing an ad-hoc command in a container.
+        CMD will be overridden when running the container with alternative arguments.
+
+        
